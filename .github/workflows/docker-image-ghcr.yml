@@ -29,7 +29,7 @@ jobs:
       - name: Check out (shallow)
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Git describe
         id: ghd
@@ -45,9 +45,9 @@ jobs:
           echo "Building tag: $TAG for ${{ matrix.arch }}"
 
       - name: Tag
-        if: ${{ !!startsWith(github.ref, 'refs/tags/') }}
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         run: |
-          TAG={{ steps.ghd.outputs.describe }}
+          TAG=${{ steps.ghd.outputs.describe }}
           echo "TAG=$TAG" >> $GITHUB_ENV
           echo "$TAG" > VERSION
           echo "Building commit tag: $TAG for ${{ matrix.arch }}"
