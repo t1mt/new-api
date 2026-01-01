@@ -31,6 +31,10 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Git describe
+        id: ghd
+        uses: proudust/gh-describe@v2
+
       - name: Resolve tag & write VERSION
         run: |
           git fetch --tags --force --depth=1
@@ -85,7 +89,7 @@ jobs:
 #           sbom: false
 
   create_manifests:
-    name: Create multi-arch manifests (Docker Hub)
+    name: Create multi-arch manifests (GHCR Hub)
     # needs: [build_single_arch]
     runs-on: ubuntu-latest
     # if: startsWith(github.ref, 'refs/tags/')
@@ -117,10 +121,6 @@ jobs:
       #       calciumion/new-api:latest-arm64
 
       # ---- GHCR ----
-      - name: Git describe
-        id: ghd
-        uses: proudust/gh-describe@v2
-
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
