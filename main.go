@@ -168,7 +168,14 @@ func main() {
 	// Log startup success message
 	common.LogStartupSuccess(startTime, port)
 
-	err = server.Run(":" + port)
+	certfile := os.Getenv("SSL_CERT_FILE")
+	keyfile := os.Getenv("SSL_KEY_FILE")
+
+	if keyfile != "" && certfile != "" {
+		err = server.RunTLS(":" + port, certfile, keyfile)
+	} else {
+		err = server.Run(":" + port)
+	}
 	if err != nil {
 		common.FatalLog("failed to start HTTP server: " + err.Error())
 	}
